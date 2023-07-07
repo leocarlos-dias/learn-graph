@@ -1,25 +1,22 @@
 import { randomUUID } from "node:crypto";
+import { Subject } from "../subjects/subject-entity";
 
 export type CourseProps = {
+  id: string;
   name: string;
   description: string;
-
+  createdAt: Date;
+  updatedAt: Date;
+  subjects: Subject[];
 }
 
 export class Course {
-  private readonly _id: string;
-  private readonly _createdAt: Date;
-  private _updatedAt: Date;
-
-  private constructor(private readonly props: CourseProps) {
-    this._id = randomUUID();
-    this._createdAt = new Date();
-    this._updatedAt = new Date();
+  private constructor(private props: CourseProps) {
     Object.assign(this.props, props);
   }
 
   get id() {
-    return this._id;
+    return this.props.id;
   }
   get name() {
     return this.props.name;
@@ -28,19 +25,35 @@ export class Course {
     return this.props.description;
   }
   get createdAt() {
-    return this._createdAt;
+    return this.props.createdAt;
   }
   get updatedAt() {
-    return this._updatedAt;
+    return this.props.updatedAt;
   }
 
-  static create(props: CourseProps) {
-    const course = new Course(props);
+  static create(props: Omit<CourseProps, "id" | "createdAt" | "updatedAt" | "subjects">) {
+    const id = randomUUID();
+    const createdAt = new Date();
+    const updatedAt = new Date();
+    const course = new Course({ ...props, id, createdAt, updatedAt, subjects: [] });
     return course;
   }
 
   public update(props: Partial<CourseProps>) {
     Object.assign(this.props, props);
-    this._updatedAt = new Date();
+    this.props.updatedAt = new Date();
+  }
+
+  public static instance(props: CourseProps & { id: string, createdAt: Date, updatedAt: Date }) {
+    const course = new Course(props);
+    return course;
+  }
+
+  public addSubject(subject: Subject) {
+    this.props.subjects.push(subject);
+  }
+
+  public removeSubject(subject: Subject) {
+    this.props.subjects = this.props.subjects.filter(s => s.id !== subject.id);
   }
 }
