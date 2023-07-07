@@ -65,7 +65,7 @@ export class Student {
   public enrollInCourse(course: Course) {
     const isEnrolled = this.props.courses.some(c => c.id === course.id);
     if (isEnrolled) {
-      throw new Error("Student already enrolled in this course");
+      throw new Error("Student is already enrolled in this course");
     }
     this.props.courses.push(course);
   }
