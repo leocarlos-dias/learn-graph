@@ -30,6 +30,9 @@ export class Course {
   get updatedAt() {
     return this.props.updatedAt;
   }
+  get subjects() {
+    return this.props.subjects;
+  }
 
   static create(props: Omit<CourseProps, "id" | "createdAt" | "updatedAt" | "subjects">) {
     const id = randomUUID();
