@@ -1,24 +1,20 @@
 import { randomUUID } from "node:crypto";
 
 export type SubjectProps = {
+  id: string;
   name: string;
   workLoad: number;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export class Subject {
-  private readonly _id: string;
-  private readonly _createdAt: Date;
-  private _updatedAt: Date;
-
-  private constructor(private readonly props: SubjectProps) {
-    this._id = randomUUID();
-    this._createdAt = new Date();
-    this._updatedAt = new Date();
+  private constructor(private props: SubjectProps) {
     Object.assign(this.props, props);
   }
 
   get id() {
-    return this._id;
+    return this.props.id;
   }
   get name() {
     return this.props.name;
@@ -27,19 +23,27 @@ export class Subject {
     return this.props.workLoad;
   }
   get createdAt() {
-    return this._createdAt;
+    return this.props.createdAt;
   }
   get updatedAt() {
-    return this._updatedAt;
+    return this.props.updatedAt;
   }
 
-  static create(props: SubjectProps) {
-    const subject = new Subject(props);
+  static create(props: Omit<SubjectProps, "id" | "createdAt" | "updatedAt">) {
+    const id = randomUUID();
+    const createdAt = new Date();
+    const updatedAt = new Date();
+    const subject = new Subject({ ...props, id, createdAt, updatedAt });
     return subject;
   }
 
-  public update(props: Partial<SubjectProps>) {
+  public update(props: Partial<Omit<SubjectProps, "id" | "createdAt" | "updatedAt">>) {
     Object.assign(this.props, props);
-    this._updatedAt = new Date();
+    this.props.updatedAt = new Date();
+  }
+
+  public static instance(props: SubjectProps) {
+    const subject = new Subject(props);
+    return subject;
   }
 }
