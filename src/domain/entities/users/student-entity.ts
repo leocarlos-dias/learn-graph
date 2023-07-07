@@ -1,28 +1,25 @@
 import { randomUUID } from "node:crypto";
+import { Course } from "../courses/course-entity";
 
 export type StudentProps = {
+  id: string;
   name: string;
   email: string;
   password: string;
+  ra: string;
+  courses: Course[];
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export class Student {
-  private readonly _id: string;
-  private readonly _ra: string;
-  private readonly _createdAt: Date;
-  private _updatedAt: Date;
 
-  private constructor(private readonly props: StudentProps) {
-    this._id = randomUUID();
-    this._createdAt = new Date();
-    this._updatedAt = new Date();
-    this._ra = `2023${Math.floor(Math.random() * 1000000).toString()}`;
-
+  private constructor(private props: StudentProps) {
     Object.assign(this.props, props);
   }
 
   get id(): string {
-    return this._id;
+    return this.props.id;
   }
   get name(): string {
     return this.props.name;
@@ -34,22 +31,43 @@ export class Student {
     return this.props.password;
   }
   get ra(): string {
-    return this._ra;
+    return this.props.ra;
   }
   get createdAt(): Date {
-    return this._createdAt;
+    return this.props.createdAt;
   }
   get updatedAt(): Date {
-    return this._updatedAt;
+    return this.props.updatedAt;
+  }
+  get courses(): Course[] {
+    return this.props.courses;
   }
 
-  public static create(props: StudentProps) {
+  public static create(props: Omit<StudentProps, "id" | "ra" | "courses" |"createdAt" | "updatedAt">) {
+    const id = randomUUID();
+    const createdAt = new Date();
+    const updatedAt = new Date();
+    const ra = `2023${Math.floor(Math.random() * 1000000).toString()}`;
+    const student = new Student({ ...props, id, ra, createdAt, updatedAt, courses: [] });
+    return student;
+  }
+
+  public static instance(props: StudentProps & { id: string, ra: string, createdAt: Date, updatedAt: Date } ) {
     const student = new Student(props);
     return student;
   }
 
   public update(props: Partial<StudentProps>) {
     Object.assign(this.props, props);
-    this._updatedAt = new Date();
+    this.props.updatedAt = new Date();
+  }
+
+  public enrollInCourse(course: Course) {
+    this.props.courses.push(course);
+  }
+
+  public unerollFromCourse(course: Course) {
+    const courseIndex = this.props.courses.findIndex(c => c.id === course.id);
+    this.props.courses.splice(courseIndex, 1);
   }
 }
