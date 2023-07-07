@@ -50,10 +50,18 @@ export class Course {
   }
 
   public addSubject(subject: Subject) {
+    const subjectExists = this.props.subjects.find(s => s.id === subject.id);
+    if (subjectExists) {
+      throw new Error("Subject already exists");
+    }
     this.props.subjects.push(subject);
   }
 
   public removeSubject(subject: Subject) {
+    const subjectExists = this.props.subjects.find(s => s.id === subject.id);
+    if (!subjectExists) {
+      throw new Error("Subject does not exists");
+    }
     this.props.subjects = this.props.subjects.filter(s => s.id !== subject.id);
   }
 }
