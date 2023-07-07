@@ -66,7 +66,7 @@ export class Student {
     this.props.courses.push(course);
   }
 
-  public unerollFromCourse(course: Course) {
+  public withdrawFromCourse(course: Course) {
     const courseIndex = this.props.courses.findIndex(c => c.id === course.id);
     this.props.courses.splice(courseIndex, 1);
   }
