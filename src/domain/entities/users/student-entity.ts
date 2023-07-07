@@ -52,12 +52,12 @@ export class Student {
     return student;
   }
 
-  public static instance(props: StudentProps & { id: string, ra: string, createdAt: Date, updatedAt: Date } ) {
+  public static instance(props: StudentProps) {
     const student = new Student(props);
     return student;
   }
 
-  public update(props: Partial<StudentProps>) {
+  public update(props: Partial<Omit<StudentProps, "id" | "ra" | "createdAt" | "updatedAt" | "courses">>) {
     Object.assign(this.props, props);
     this.props.updatedAt = new Date();
   }

@@ -39,12 +39,12 @@ export class Course {
     return course;
   }
 
-  public update(props: Partial<CourseProps>) {
+  public update(props: Partial<Omit<CourseProps, "id" | "createdAt" | "updatedAt" | "subjects">>) {
     Object.assign(this.props, props);
     this.props.updatedAt = new Date();
   }
 
-  public static instance(props: CourseProps & { id: string, createdAt: Date, updatedAt: Date }) {
+  public static instance(props: CourseProps) {
     const course = new Course(props);
     return course;
   }
