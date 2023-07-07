@@ -63,11 +63,18 @@ export class Student {
   }
 
   public enrollInCourse(course: Course) {
+    const isEnrolled = this.props.courses.some(c => c.id === course.id);
+    if (isEnrolled) {
+      throw new Error("Student already enrolled in this course");
+    }
     this.props.courses.push(course);
   }
 
   public withdrawFromCourse(course: Course) {
-    const courseIndex = this.props.courses.findIndex(c => c.id === course.id);
-    this.props.courses.splice(courseIndex, 1);
+    const isEnrolled = this.props.courses.some(c => c.id === course.id);
+    if (!isEnrolled) {
+      throw new Error("Student is not enrolled in this course");
+    }
+    this.props.courses = this.props.courses.filter(c => c.id !== course.id);
   }
 }
