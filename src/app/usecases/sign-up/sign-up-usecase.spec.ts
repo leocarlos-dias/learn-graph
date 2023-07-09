@@ -1,14 +1,14 @@
-import { UserRepository } from "../../../domain/repotisories/user-repository";
-import { UserInMemoryRepository } from "../../../infra/repositories/in-memory/user-in-memory-repository";
+import { StudentRepository } from "../../../domain/repotisories/student-repository";
+import { StudentInMemoryRepository } from "../../../infra/repositories/in-memory/student-in-memory-repository";
 import { SignUpUseCase } from "./sign-up-usecase";
 
 describe('SignUpUsecase', () => {
-  let userRepository: UserRepository;
+  let studentRepository: StudentRepository;
   let signUpUseCase: SignUpUseCase;
 
   beforeEach(() => {
-    userRepository = new UserInMemoryRepository();
-    signUpUseCase = new SignUpUseCase(userRepository);
+    studentRepository = new StudentInMemoryRepository();
+    signUpUseCase = new SignUpUseCase(studentRepository);
   });
 
   it("should save the student data", async () => {
@@ -23,7 +23,7 @@ describe('SignUpUsecase', () => {
     await signUpUseCase.execute(student);
 
     // Assert
-    const savedStudent = await userRepository.findByEmail(student.email);
+    const savedStudent = await studentRepository.findByEmail(student.email);
     expect(savedStudent).toMatchObject(student);
     expect(savedStudent?.id).toBeDefined();
     expect(savedStudent?.ra).toBeDefined();
@@ -34,7 +34,7 @@ describe('SignUpUsecase', () => {
     expect(savedStudent?.courses).toHaveLength(0);
   })
 
-  it("should throw an error if the user already exists", async () => {
+  it("should throw an error if the student already exists", async () => {
     // Arrange
     const student = {
       name: "John Doe",
@@ -46,6 +46,6 @@ describe('SignUpUsecase', () => {
     await signUpUseCase.execute(student);
 
     // Assert
-    await expect(signUpUseCase.execute(student)).rejects.toThrowError("User already exists");
+    await expect(signUpUseCase.execute(student)).rejects.toThrowError("Student already exists");
   });
 });

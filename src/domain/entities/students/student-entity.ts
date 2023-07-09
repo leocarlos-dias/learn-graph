@@ -47,7 +47,7 @@ export class Student {
     const id = randomUUID();
     const createdAt = new Date();
     const updatedAt = new Date();
-    const ra = `2023${Math.floor(Math.random() * 1000000).toString()}`;
+    const ra = `2023${Math.floor(Math.random() * 1000000).toString().padStart(6, '0')}`;
     const student = new Student({ ...props, id, ra, createdAt, updatedAt, courses: [] });
     return student;
   }

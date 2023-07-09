@@ -1,17 +1,17 @@
-import { Student } from "../../../domain/entities/users/student-entity";
-import { UserRepository } from "../../../domain/repotisories/user-repository";
+import { Student } from "../../../domain/entities/students/student-entity";
+import { StudentRepository } from "../../../domain/repotisories/student-repository";
 import { CreateStudentDTO } from "../../dtos/student-dto";
 
 export class SignUpUseCase {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(private readonly studentRepository: StudentRepository) {}
 
   async execute(data: CreateStudentDTO): Promise<void> {
-    const userAlreadyExists = await this.userRepository.findByEmail(data.email);
-    if (userAlreadyExists) {
-      throw new Error("User already exists");
+    const studentAlreadyExists = await this.studentRepository.findByEmail(data.email);
+    if (studentAlreadyExists) {
+      throw new Error("Student already exists");
     }
-    const user = Student.create(data);
-    await this.userRepository.save(user);
+    const student = Student.create(data);
+    await this.studentRepository.save(student);
   }
 }
 
