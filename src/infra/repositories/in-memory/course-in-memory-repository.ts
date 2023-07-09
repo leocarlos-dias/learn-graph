@@ -5,6 +5,9 @@ export class CourseInMemoryRepository implements CourseRepository {
 
   constructor(private readonly courses: CourseDTO[] = []) {}
 
+  async findByName(name: string): Promise<CourseDTO | undefined> {
+    return this.courses.find((course) => course.name === name);
+  }
   async findById(id: string): Promise<CourseDTO | undefined> {
     return this.courses.find((course) => course.id === id);
   }
