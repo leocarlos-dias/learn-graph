@@ -2,7 +2,7 @@ import { StudentRepository } from "../../../domain/repotisories/student-reposito
 import { StudentInMemoryRepository } from "../../../infra/repositories/in-memory/student-in-memory-repository";
 import { SignUpUseCase } from "./sign-up-usecase";
 
-describe('SignUpUsecase', () => {
+describe('Sign Up Usecase', () => {
   let studentRepository: StudentRepository;
   let signUpUseCase: SignUpUseCase;
 
@@ -11,7 +11,7 @@ describe('SignUpUsecase', () => {
     signUpUseCase = new SignUpUseCase(studentRepository);
   });
 
-  it("should save the student data", async () => {
+  it("should create the student data", async () => {
     // Arrange
     const student = {
       name: "John Doe",
