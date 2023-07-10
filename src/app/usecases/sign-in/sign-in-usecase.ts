@@ -8,10 +8,10 @@ export class SignInUseCase {
   async execute(data: SignInStudentDTO): Promise<{ token: string }> {
     const student = await this.studentRepository.findByEmail(data.email);
     if (!student) {
-      throw new Error("User not found");
+      throw new Error("Wrong credentials");
     }
     if (student.password !== data.password) {
-      throw new Error("Invalid password");
+      throw new Error("Wrong credentials");
     }
     const token = this.jwtService.sign({ id: student.id }, { expiresIn: "1d" });
     return { token };
