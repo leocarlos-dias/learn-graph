@@ -1,0 +1,71 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Student {
+  id            Int             @id
+  name          String
+  email         String          @unique
+  password      String
+  ra            String          @unique
+  createdAt     DateTime
+  updatedAt     DateTime
+  CourseStudent CourseStudent[]
+
+  @@map("students")
+}
+
+model Course {
+  id            Int             @id
+  name          String
+  description   String
+  createdAt     DateTime
+  updatedAt     DateTime
+  CourseStudent CourseStudent[]
+  CourseSubject CourseSubject[]
+
+  @@map("courses")
+}
+
+model Subject {
+  id            Int             @id
+  name          String
+  workLoad      Int
+  createdAt     DateTime
+  updatedAt     DateTime
+  CourseSubject CourseSubject[]
+
+  @@map("subjects")
+}
+
+model CourseStudent {
+  createdAt DateTime
+  updatedAt DateTime
+  course    Course   @relation(fields: [courseId], references: [id])
+  courseId  Int
+  student   Student  @relation(fields: [studentId], references: [id])
+  studentId Int
+
+  @@id([courseId, studentId])
+  @@map("course_student")
+}
+
+model CourseSubject {
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  course    Course   @relation(fields: [courseId], references: [id])
+  courseId  Int
+  subject   Subject  @relation(fields: [subjectId], references: [id])
+  subjectId Int
+
+  @@id([courseId, subjectId])
+  @@map("course_subject")
+}
