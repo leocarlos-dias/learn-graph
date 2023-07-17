@@ -6,6 +6,9 @@ export class SignUpUseCase {
 	constructor(private readonly studentRepository: StudentRepository) { }
 
 	async execute(data: SignUpStudentDTO): Promise<void> {
+		if (!data.email || !data.name || !data.password) {
+			throw new Error("Invalid data");
+		}
 		const studentAlreadyExists = await this.studentRepository.findByEmail(data.email);
 		if (studentAlreadyExists) {
 			throw new Error("Student already exists");

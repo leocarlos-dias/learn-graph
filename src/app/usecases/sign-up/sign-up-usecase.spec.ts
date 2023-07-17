@@ -50,4 +50,16 @@ describe("Sign Up Usecase", () => {
 		// Assert
 		await expect(signUpUseCase.execute(student)).rejects.toThrowError("Student already exists");
 	});
+
+	it("should throw an error if the student data is invalid", async () => {
+		// Arrange
+		const student = {
+			name: "John Doe",
+			email: "jonhdoe@example.com",
+			password: "",
+		};
+
+		// Act & Assert
+		await expect(signUpUseCase.execute(student)).rejects.toThrowError("Invalid data");
+	});
 });
