@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "dev": "ts-node-dev --respawn --transpile-only ./src/infra/http/graphql/server.ts"
+    "dev": "ts-node-dev --clear --respawn --transpile-only ./src/infra/http/graphql.ts"
   },
   "devDependencies": {
     "@types/jest": "^29.5.2",
