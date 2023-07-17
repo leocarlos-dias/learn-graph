@@ -6,7 +6,7 @@ import { StudentRepository } from "../../../domain/repotisories/student-reposito
 export class EnrollInCourseUseCase {
 	constructor(private readonly courseRepository: CourseRepository, private readonly studentRepository: StudentRepository) {
 	}
-	async execute(data: { courseId: string, studentId: string }): Promise<void> {
+	async execute(data: { courseId: string, studentId: string }): Promise<Student> {
 		const courseAlreadyExists = await this.courseRepository.findById(data.courseId);
 		if (!courseAlreadyExists) {
 			throw new Error("Course does not exists");
@@ -25,5 +25,6 @@ export class EnrollInCourseUseCase {
 
 		student.enrollInCourse(course);
 		await this.studentRepository.save(student);
+		return student;
 	}
 }

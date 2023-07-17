@@ -68,7 +68,7 @@ describe("add subject usecase", () => {
 
 		await courseRepository.create(Course.create(course));
 		const savedCourse = await courseRepository.findByName(course.name);
-		addSubjectUseCase.execute({ courseId: savedCourse!.id, subject: subject });
+		await addSubjectUseCase.execute({ courseId: savedCourse!.id, subject: subject });
 
 		// Act & Assert
 		await expect(addSubjectUseCase.execute({ courseId: savedCourse!.id, subject: subject })).rejects.toThrow("Subject already exists");

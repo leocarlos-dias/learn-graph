@@ -4,8 +4,7 @@ import { SignUpStudentDTO } from "../../dtos/student-dto";
 
 export class SignUpUseCase {
 	constructor(private readonly studentRepository: StudentRepository) { }
-
-	async execute(data: SignUpStudentDTO): Promise<void> {
+	async execute(data: SignUpStudentDTO): Promise<Student> {
 		if (!data.email || !data.name || !data.password) {
 			throw new Error("Invalid data");
 		}
@@ -14,7 +13,8 @@ export class SignUpUseCase {
 			throw new Error("Student already exists");
 		}
 		const student = Student.create(data);
-		await this.studentRepository.save(student);
+		await this.studentRepository.create(student);
+		return student;
 	}
 }
 

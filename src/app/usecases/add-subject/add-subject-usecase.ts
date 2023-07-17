@@ -6,11 +6,11 @@ import { CreateSubjectDTO } from "../../dtos/subject-dto";
 
 export class AddSubjectUseCase {
 	constructor(
-    private readonly courseRepository: CourseRepository,
-    private readonly subjectRepository: SubjectRepository
+		private readonly courseRepository: CourseRepository,
+		private readonly subjectRepository: SubjectRepository
 	) { }
 
-	async execute(data: { courseId: string, subject: CreateSubjectDTO }): Promise<void> {
+	async execute(data: { courseId: string, subject: CreateSubjectDTO }): Promise<Course> {
 		const courseAlreadyExists = await this.courseRepository.findById(data.courseId);
 		if (!courseAlreadyExists) {
 			throw new Error("Course does not exists");
@@ -19,7 +19,6 @@ export class AddSubjectUseCase {
 		if (subjectAlreadyExistsInCourse) {
 			throw new Error("Subject already exists in course");
 		}
-
 		let subject: Subject;
 		const subjectAlreadyExists = await this.subjectRepository.findByName(data.subject.name);
 		if (subjectAlreadyExists) {
@@ -33,5 +32,6 @@ export class AddSubjectUseCase {
 		course.addSubject(subject);
 
 		await this.courseRepository.save(course);
+		return course;
 	}
 }
