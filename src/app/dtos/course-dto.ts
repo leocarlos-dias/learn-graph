@@ -1,5 +1,6 @@
 import { CourseProps } from "../../domain/entities/courses/course-entity";
+import { SubjectDTO } from "./subject-dto";
 
-export type CourseDTO = CourseProps;
-export type CreateCourseDTO = Omit<CourseProps, "id" | "createdAt" | "updatedAt" | "subjects">;
-export type UpdateCourseDTO = Partial<Omit<CourseProps, "id" | "createdAt" | "updatedAt" | "subjects">>;
+export type CourseDTO = Omit<CourseProps, "subjects"> & { subjects: SubjectDTO[] };
+export type CreateCourseDTO = Pick<CourseProps, "name" | "description">;
+export type UpdateCourseDTO = Partial<Pick<CourseProps, "name" | "description">>;
