@@ -11,37 +11,37 @@ datasource db {
 }
 
 model Student {
-  id            Int             @id
-  name          String
-  email         String          @unique
-  password      String
-  ra            String          @unique
-  createdAt     DateTime
-  updatedAt     DateTime
-  CourseStudent CourseStudent[]
+  id        String          @id
+  name      String
+  email     String          @unique
+  password  String
+  ra        String          @unique
+  createdAt DateTime
+  updatedAt DateTime
+  courses   CourseStudent[]
 
   @@map("students")
 }
 
 model Course {
-  id            Int             @id
-  name          String
-  description   String
-  createdAt     DateTime
-  updatedAt     DateTime
-  CourseStudent CourseStudent[]
-  CourseSubject CourseSubject[]
+  id          String          @id
+  name        String
+  description String
+  createdAt   DateTime
+  updatedAt   DateTime
+  students    CourseStudent[]
+  subjects    CourseSubject[]
 
   @@map("courses")
 }
 
 model Subject {
-  id            Int             @id
-  name          String
-  workLoad      Int
-  createdAt     DateTime
-  updatedAt     DateTime
-  CourseSubject CourseSubject[]
+  id        String          @id
+  name      String
+  workLoad  Int
+  createdAt DateTime
+  updatedAt DateTime
+  courses   CourseSubject[]
 
   @@map("subjects")
 }
@@ -49,10 +49,10 @@ model Subject {
 model CourseStudent {
   createdAt DateTime
   updatedAt DateTime
+  courseId  String
   course    Course   @relation(fields: [courseId], references: [id])
-  courseId  Int
+  studentId String
   student   Student  @relation(fields: [studentId], references: [id])
-  studentId Int
 
   @@id([courseId, studentId])
   @@map("course_student")
@@ -61,10 +61,10 @@ model CourseStudent {
 model CourseSubject {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  courseId  String
   course    Course   @relation(fields: [courseId], references: [id])
-  courseId  Int
+  subjectId String
   subject   Subject  @relation(fields: [subjectId], references: [id])
-  subjectId Int
 
   @@id([courseId, subjectId])
   @@map("course_subject")

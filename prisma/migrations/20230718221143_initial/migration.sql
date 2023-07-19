@@ -1,6 +1,6 @@
 -- CreateTable
 CREATE TABLE `students` (
-    `id` INTEGER NOT NULL,
+    `id` VARCHAR(191) NOT NULL,
     `name` VARCHAR(191) NOT NULL,
     `email` VARCHAR(191) NOT NULL,
     `password` VARCHAR(191) NOT NULL,
@@ -15,7 +15,7 @@ CREATE TABLE `students` (
 
 -- CreateTable
 CREATE TABLE `courses` (
-    `id` INTEGER NOT NULL,
+    `id` VARCHAR(191) NOT NULL,
     `name` VARCHAR(191) NOT NULL,
     `description` VARCHAR(191) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL,
@@ -26,7 +26,7 @@ CREATE TABLE `courses` (
 
 -- CreateTable
 CREATE TABLE `subjects` (
-    `id` INTEGER NOT NULL,
+    `id` VARCHAR(191) NOT NULL,
     `name` VARCHAR(191) NOT NULL,
     `workLoad` INTEGER NOT NULL,
     `createdAt` DATETIME(3) NOT NULL,
@@ -39,8 +39,8 @@ CREATE TABLE `subjects` (
 CREATE TABLE `course_student` (
     `createdAt` DATETIME(3) NOT NULL,
     `updatedAt` DATETIME(3) NOT NULL,
-    `courseId` INTEGER NOT NULL,
-    `studentId` INTEGER NOT NULL,
+    `courseId` VARCHAR(191) NOT NULL,
+    `studentId` VARCHAR(191) NOT NULL,
 
     PRIMARY KEY (`courseId`, `studentId`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -49,8 +49,8 @@ CREATE TABLE `course_student` (
 CREATE TABLE `course_subject` (
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
-    `courseId` INTEGER NOT NULL,
-    `subjectId` INTEGER NOT NULL,
+    `courseId` VARCHAR(191) NOT NULL,
+    `subjectId` VARCHAR(191) NOT NULL,
 
     PRIMARY KEY (`courseId`, `subjectId`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
