@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { Subject } from "../subjects/subject-entity";
+import { Subject, SubjectProps } from "../subjects/subject-entity";
 
 export type CourseProps = {
   id: string;
@@ -7,7 +7,7 @@ export type CourseProps = {
   description: string;
   createdAt: Date;
   updatedAt: Date;
-  subjects: Subject[];
+  subjects: SubjectProps[];
 }
 
 export class Course {
@@ -50,6 +50,17 @@ export class Course {
 	public static instance(props: CourseProps) {
 		const course = new Course(props);
 		return course;
+	}
+
+	public toObject() {
+		return {
+			id: this.id,
+			name: this.name,
+			description: this.description,
+			createdAt: this.createdAt,
+			updatedAt: this.updatedAt,
+			subjects: this.subjects,
+		};
 	}
 
 	public addSubject(subject: Subject) {

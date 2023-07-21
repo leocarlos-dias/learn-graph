@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { Course } from "../courses/course-entity";
+import { Course, CourseProps } from "../courses/course-entity";
 
 export type StudentProps = {
   id: string;
@@ -7,7 +7,7 @@ export type StudentProps = {
   email: string;
   password: string;
   ra: string;
-  courses: Course[];
+  courses: CourseProps[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -39,7 +39,7 @@ export class Student {
 	get updatedAt(): Date {
 		return this.props.updatedAt;
 	}
-	get courses(): Course[] {
+	get courses(): CourseProps[] {
 		return this.props.courses;
 	}
 
@@ -55,6 +55,32 @@ export class Student {
 	public static instance(props: StudentProps) {
 		const student = new Student(props);
 		return student;
+	}
+
+	public toObject() {
+		return {
+			id: this.id,
+			name: this.name,
+			email: this.email,
+			password: this.password,
+			ra: this.ra,
+			courses: this.courses.map(course => ({
+				id: course.id,
+				name: course.name,
+				description: course.description,
+				createdAt: course.createdAt,
+				updatedAt: course.updatedAt,
+				subjects: course.subjects.map(subject => ({
+					id: subject.id,
+					name: subject.name,
+					workLoad: subject.workLoad,
+					createdAt: subject.createdAt,
+					updatedAt: subject.updatedAt,
+				})),
+			})),
+			createdAt: this.createdAt,
+			updatedAt: this.updatedAt,
+		};
 	}
 
 	public update(props: Partial<Omit<StudentProps, "id" | "ra" | "createdAt" | "updatedAt" | "courses">>) {
@@ -77,4 +103,6 @@ export class Student {
 		}
 		this.props.courses = this.props.courses.filter(c => c.id !== course.id);
 	}
+
+
 }
