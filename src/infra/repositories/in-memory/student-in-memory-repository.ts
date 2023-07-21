@@ -4,6 +4,9 @@ import { StudentRepository } from "../../../domain/repotisories/student-reposito
 export class StudentInMemoryRepository implements StudentRepository {
 	private students: StudentDTO[] = [];
 
+	async findAll(): Promise<StudentDTO[]> {
+		return this.students;
+	}
 	async findByEmail(email: string): Promise<StudentDTO | null> {
 		const student = this.students.find((student) => student.email === email);
 		return student || null;
@@ -14,7 +17,6 @@ export class StudentInMemoryRepository implements StudentRepository {
 	}
 	async create(student: StudentDTO): Promise<void> {
 		this.students.push(student);
-		console.log(this.students);
 	}
 	async save(student: StudentDTO): Promise<void> {
 		const studentIndex = this.students.findIndex((u) => u.email === student.email);
