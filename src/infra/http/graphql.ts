@@ -1,24 +1,26 @@
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
-import { StudentInMemoryRepository } from "../repositories/in-memory/student-in-memory-repository";
 import { SignUpUseCase } from "../../app/usecases/sign-up/sign-up-usecase";
 import { SignInUseCase } from "../../app/usecases/sign-in/sign-in-usecase";
 import { JwtService } from "../security/jwt-service";
 import { SignInStudentDTO, SignUpStudentDTO, StudentDTO } from "../../app/dtos/student-dto";
-import { CourseInMemoryRepository } from "../repositories/in-memory/course-in-memory-repository";
 import { CreateCourseUseCase } from "../../app/usecases/create-course/create-course-usecase";
 import { CreateCourseDTO } from "../../app/dtos/course-dto";
 import { CreateSubjectDTO } from "../../app/dtos/subject-dto";
-import { SubjectInMemoryRepository } from "../repositories/in-memory/subject-in-memory-repository";
 import { AddSubjectUseCase } from "../../app/usecases/add-subject/add-subject-usecase";
 import { EnrollInCourseUseCase } from "../../app/usecases/enroll-in-course/enroll-in-course-usecase";
+import { StudentDatabaseRepository } from "../repositories/mysql/student-database-repository";
+import { PrismaClient } from "@prisma/client";
+import { CourseDatabaseRepository } from "../repositories/mysql/course-database-repository";
+import { SubjectDatabaseRepository } from "../repositories/mysql/subject-database.repository";
+import { GetAllStudentsUseCase } from "../../app/usecases/get-all-students/get-all-students-usecase";
 
 async function main() {
 	const typeDefs = `
     scalar Date
     scalar Void
     type Query {
-      students: Student!
+      students: [Student!]!
     }
     type Subject {
       id: String!
@@ -33,7 +35,7 @@ async function main() {
       description: String!
       createdAt: Date!
       updatedAt: Date!
-      subjects: [Subject!]!
+      subjects: [Subject]!
     }
     type Student {
       id: String!
@@ -41,7 +43,7 @@ async function main() {
       email: String!
       password: String!
       ra: String!
-      courses: [Course!]!
+      courses: [Course]!
       createdAt: Date!
       updatedAt: Date!
     }
@@ -82,12 +84,19 @@ async function main() {
     }
   `;
 
-	const studentRepository = new StudentInMemoryRepository();
-	const courseRepository = new CourseInMemoryRepository();
-	const subjectRepository = new SubjectInMemoryRepository();
+	const prismaClient = new PrismaClient();
+	const studentRepository = new StudentDatabaseRepository(prismaClient);
+	const courseRepository = new CourseDatabaseRepository(prismaClient);
+	const subjectRepository = new SubjectDatabaseRepository(prismaClient);
 	const jwtService = new JwtService();
 
 	const resolvers = {
+		Query: {
+			students: async () => {
+				const getAllStudents = new GetAllStudentsUseCase(studentRepository);
+				return await getAllStudents.execute();
+			},
+		},
 		Mutation: {
 			signUp: async (_: unknown, { data: { email, name, password } }: { data: SignUpStudentDTO }): Promise<StudentDTO> => {
 				const signUpUseCase = new SignUpUseCase(studentRepository);
@@ -95,8 +104,7 @@ async function main() {
 			},
 			signIn: async (_: unknown, { data: { email, password } }: { data: SignInStudentDTO }): Promise<{ token: string }> => {
 				const signInUseCase = new SignInUseCase(studentRepository, jwtService);
-				const output = await signInUseCase.execute({ email, password });
-				return output;
+				return await signInUseCase.execute({ email, password });
 			},
 			createCourse: async (_: unknown, { data: { name, description } }: { data: CreateCourseDTO }) => {
 				const createCourseUseCase = new CreateCourseUseCase(courseRepository);
