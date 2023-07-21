@@ -1,10 +1,10 @@
 import { Student } from "../../../domain/entities/students/student-entity";
 import { StudentRepository } from "../../../domain/repotisories/student-repository";
-import { SignUpStudentDTO } from "../../dtos/student-dto";
+import { SignUpStudentDTO, StudentDTO } from "../../dtos/student-dto";
 
 export class SignUpUseCase {
 	constructor(private readonly studentRepository: StudentRepository) { }
-	async execute(data: SignUpStudentDTO): Promise<Student> {
+	async execute(data: SignUpStudentDTO): Promise<StudentDTO> {
 		if (!data.email || !data.name || !data.password) {
 			throw new Error("Invalid data");
 		}
@@ -14,7 +14,7 @@ export class SignUpUseCase {
 		}
 		const student = Student.create(data);
 		await this.studentRepository.create(student);
-		return student;
+		return student.toObject();
 	}
 }
 

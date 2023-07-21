@@ -2,6 +2,7 @@ import { Course } from "../../../domain/entities/courses/course-entity";
 import { Subject } from "../../../domain/entities/subjects/subject-entity";
 import { CourseRepository } from "../../../domain/repotisories/course-repository";
 import { SubjectRepository } from "../../../domain/repotisories/subject-repository";
+import { CourseDTO } from "../../dtos/course-dto";
 import { CreateSubjectDTO } from "../../dtos/subject-dto";
 
 export class AddSubjectUseCase {
@@ -10,7 +11,7 @@ export class AddSubjectUseCase {
 		private readonly subjectRepository: SubjectRepository
 	) { }
 
-	async execute(data: { courseId: string, subject: CreateSubjectDTO }): Promise<Course> {
+	async execute(data: { courseId: string, subject: CreateSubjectDTO }): Promise<CourseDTO> {
 		const courseAlreadyExists = await this.courseRepository.findById(data.courseId);
 		if (!courseAlreadyExists) {
 			throw new Error("Course does not exists");
@@ -32,6 +33,6 @@ export class AddSubjectUseCase {
 		course.addSubject(subject);
 
 		await this.courseRepository.save(course);
-		return course;
+		return course.toObject();
 	}
 }
